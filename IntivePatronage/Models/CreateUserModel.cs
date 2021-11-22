@@ -41,6 +41,7 @@ namespace IntivePatronage.Models
         [StringLength(10)]
         public string AddressHouseNumber { get; set; }
 
+        [StringLength(10)]
         public string AddressLocalNumber { get; set; }
 
     }

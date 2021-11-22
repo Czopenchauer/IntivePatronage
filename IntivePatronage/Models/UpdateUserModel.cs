@@ -9,14 +9,18 @@ namespace IntivePatronage.Models
 {
     public class UpdateUserModel
     {
+        [Required]
         [StringLength(50)]
         public string FirstName { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string LastName { get; set; }
 
+        [Required]
         public DateTime DateOfBirth { get; set; }
 
+        [Required]
         public bool Gender { get; set; }
 
         public decimal? Weight { get; set; }
