@@ -31,14 +31,8 @@ namespace IntivePatronage.Controllers
         {
             try
             {
-                var config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<CreateUserDto, User>();
-                    cfg.CreateMap<AddressDto, Address>();
-                });
-                var mapp = config.CreateMapper();
-
                 User user = new User();
-                user = mapp.Map<CreateUserDto, User>(request);
+                mapper.Map(request, user);
 
                 if(!(await repository.AddUserAsync(user)))
                 {
@@ -105,15 +99,7 @@ namespace IntivePatronage.Controllers
                     return NotFound("Couldn't find the user");
                 }
 
-                var config = new MapperConfiguration(cfg => {
-                    cfg.CreateMap<UpdateUserDto, User>()
-                        .ForMember(x => x.Address, options => options.Condition(src => src.Address != null));
-                    cfg.CreateMap<AddressDto, Address>();
-                });
-
-                var mapp = config.CreateMapper();
-
-                mapp.Map(request, user);
+                mapper.Map(request, user);
 
                 if (!(await repository.SaveChangesAsync()))
                 {
