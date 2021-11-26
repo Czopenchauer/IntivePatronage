@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "076cf8ee-804d-4a95-a4f7-cf5a393b8bea",
+		"name": "Intive",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"FirstName\": \"Dave\",\r\n    \"LastName\": \"cook\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"Wroclaw\",\r\n        \"PostCode\" : \"50-319\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44359/User",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User Validation error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"FirstName\": \"Dave\",\r\n    \"LastName\": \"Cook\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"\",\r\n        \"PostCode\" : \"50-319999999\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44359/User",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44359/User",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44359/User/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"FirstName\": \"Lepszy\",\r\n\t\"LastName\": \"Dave\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44359/User/update/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User",
+						"update",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User with Address",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"FirstName\": \"Lepszy\",\r\n\t\"LastName\": \"Dave\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"LepszyWroclaw\",\r\n        \"PostCode\" : \"69-420\",\r\n        \"Street\" : \"Wysokinskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    } \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44359/User/update/6",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User",
+						"update",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44359/User/6",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User",
+						"6"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
