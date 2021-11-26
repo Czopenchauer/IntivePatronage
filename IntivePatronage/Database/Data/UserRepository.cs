@@ -4,47 +4,119 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace IntivePatronage.ApplicationUser
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApplicationDbContext _ctx;
+        private readonly ApplicationDbContext ctx;
 
         public UserRepository(ApplicationDbContext ctx)
         {
-            _ctx = ctx;
+            this.ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
         }
 
-        public void Add<T>(T entity) where T : class
+        public async Task<bool> AddUserAsync(User user)
         {
-            _ctx.Add(entity);
+            if(user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            try
+            {
+                var transaction = ctx.Database.BeginTransaction();
+
+                ctx.Users.Add(user);
+
+                await ctx.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public void Delete<T>(T entity) where T : class
+        public async Task<bool> DeleteUserAsync(User user)
         {
-            _ctx.Remove(entity);
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            try
+            {
+                var transaction = ctx.Database.BeginTransaction();
+                var address = user.Address;
+                ctx.Users.Remove(user);
+                ctx.Addresses.Remove(address);
+
+                await ctx.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public void AddAddress(Address address)
         {
-            return (await _ctx.SaveChangesAsync() > 0);
+            if(address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            ctx.Addresses.Add(address);
+        }
+
+
+        public void DeleteAddress(Address address)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            ctx.Addresses.Remove(address);
         }
 
         public async Task<User> GetUserAsync(int id)
         {
-            return await _ctx.Users
-                .Include(x => x.Address)
-                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
+            return await ctx.Users
+                        .Include(x => x.Address)
+                        .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()
         {         
-             return await _ctx.Users
-                .Include(a => a.Address)
-                .ToListAsync();
+             return await ctx.Users
+                        .Include(a => a.Address)
+                        .ToArrayAsync();
         }
 
+        public async Task<Address> GetAddressAsync(int id)
+        {
+            return (await ctx.Addresses.Include(u => u.User).FirstOrDefaultAsync(x => x.User.Id == id));
+        }
+
+        public async Task<IEnumerable<Address>> GetAddressesAsync()
+        {
+            return await ctx.Addresses
+                       .Include(a => a.User)
+                       .ToArrayAsync();
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await ctx.SaveChangesAsync() > 0);
+        }
     }
 }

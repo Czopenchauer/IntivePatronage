@@ -1,12 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace IntivePatronage.Entities
+﻿namespace API.Models
 {
-    public class Address
-    {     
-        public int Id { get; set; }
-
+    public class AddressDto
+    {
         public string Country { get; set; }
 
         public string City { get; set; }
@@ -18,7 +13,5 @@ namespace IntivePatronage.Entities
         public string HouseNumber { get; set; }
 
         public string LocalNumber { get; set; }
-
-        public User User { get; set; }
     }
 }

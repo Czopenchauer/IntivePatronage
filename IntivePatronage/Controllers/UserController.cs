@@ -1,4 +1,6 @@
-﻿using IntivePatronage.ApplicationUser;
+﻿using API.Models;
+using AutoMapper;
+using IntivePatronage.ApplicationUser;
 using IntivePatronage.Entities;
 using IntivePatronage.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,173 +17,114 @@ namespace IntivePatronage.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly IUserRepository _repository;
-        private readonly LinkGenerator _linkGenerator;
+        private readonly IUserRepository repository;
+        private readonly IMapper mapper;
 
-        public UserController(IUserRepository repository, LinkGenerator linkGenerator)
+        public UserController(IUserRepository repository, IMapper mapper)
         {
-            _repository = repository;
-            _linkGenerator = linkGenerator;
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUserAsync(CreateUserModel request)
+        public async Task<ActionResult<User>> CreateUserAsync(CreateUserDto request)
         {
             try
             {
-                var address = new Address
-                {
-                    Country = request.AddressCountry,
-                    City = request.AddressCity,
-                    PostCode = request.AddressPostCode,
-                    Street = request.AddressPostCode,
-                    HouseNumber = request.AddressHouseNumber,
-                    LocalNumber = request.AddressLocalNumber
-                };
-                _repository.Add(address);
-
-                if (!(await _repository.SaveChangesAsync()))
-                {
-                    return BadRequest();
-                }
-
-                var user = new User
-                {
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
-                    DateOfBirth = request.DateOfBirth,
-                    Gender = request.Gender,
-                    Weight = request.Weight,
-                    AddressId = address.Id,
-                    Address = address
-                };
-
-                _repository.Add(user);
-
-                if (!(await _repository.SaveChangesAsync()))
-                {
-                    return BadRequest();
-                }
-
-                //var location = _linkGenerator.GetPathByAction("HttpGet", "User", new { id = user.Id});
-/*
-                if (string.IsNullOrWhiteSpace(location))
-                {
-                    return BadRequest();
-                }*/
-
-                return Created($"/user/{ user.Id}", new UserModel
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
-                    Weight = user.Weight
+                var config = new MapperConfiguration(cfg => {
+                    cfg.CreateMap<CreateUserDto, User>();
+                    cfg.CreateMap<AddressDto, Address>();
                 });
+                var mapp = config.CreateMapper();
+
+                User user = new User();
+                user = mapp.Map<CreateUserDto, User>(request);
+
+                if(!(await repository.AddUserAsync(user)))
+                {
+                    return BadRequest();
+                }
+
+                return Ok();
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsersAsync() 
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync() 
         {
             try
             {
-                var users = await _repository.GetUsersAsync();
+                var users = await repository.GetUsersAsync();
 
                 if (!users.Any())
                 {
                     return NotFound();
                 }
-
-                return Ok(users.Select(x => new UserModel
-                {
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    DateOfBirth = x.DateOfBirth,
-                    Gender = x.Gender,
-                    Weight = x.Weight,
-
-                    AddressCountry = x.Address.Country,
-                    AddressCity = x.Address.City,
-                    AddressPostCode = x.Address.PostCode,
-                    AddressStreet = x.Address.Street,
-                    AddressHouseNumber = x.Address.HouseNumber,
-                    AddressLocalNumber = x.Address.LocalNumber
-
-                }));
+                
+                return Ok(mapper.Map<IEnumerable<UserDto>>(users));
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<UserModel>> GetUser(int id) 
+        public async Task<ActionResult<UserDto>> GetUser(int id) 
         {
             try
             {
-                var user = await _repository.GetUserAsync(id);
+                var user = await repository.GetUserAsync(id);
 
                 if (user is null)
                 {
                     return NotFound("Couldn't find the user");
                 }
 
-                return Ok(new UserModel
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
-                    Weight = user.Weight,
-
-                    AddressCountry = user.Address.Country,
-                    AddressCity = user.Address.City,
-                    AddressPostCode = user.Address.PostCode,
-                    AddressStreet = user.Address.Street,
-                    AddressHouseNumber = user.Address.HouseNumber,
-                    AddressLocalNumber = user.Address.LocalNumber
-                });
+                return Ok(mapper.Map<UserDto>(user));
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        [HttpPost("{id:int}/update")]
-        public async Task<ActionResult<UserModel>> UpdateUser(int id, UpdateUserModel request)
+        [HttpPost("update/{id:int}")]
+        public async Task<ActionResult<UserDto>> UpdateUser(int id, UpdateUserDto request)
         {
             try
-            {
-                var user = await _repository.GetUserAsync(id);
+            {              
+                var user = await repository.GetUserAsync(id);
 
-                if(user is null)
+                if (user is null)
                 {
                     return NotFound("Couldn't find the user");
                 }
 
-                user.FirstName = request.FirstName;
-                user.LastName = request.LastName;
-                user.DateOfBirth = request.DateOfBirth;
-                user.Gender = request.Gender;
-                user.Weight = request.Weight;
+                var config = new MapperConfiguration(cfg => {
+                    cfg.CreateMap<UpdateUserDto, User>()
+                        .ForMember(x => x.Address, options => options.Condition(src => src.Address != null));
+                    cfg.CreateMap<AddressDto, Address>();
+                });
 
-                if (!(await _repository.SaveChangesAsync()))
+                var mapp = config.CreateMapper();
+
+                mapp.Map(request, user);
+
+                if (!(await repository.SaveChangesAsync()))
                 {
                     return BadRequest();
                 }
 
-                return Ok(user);
+                return NoContent();
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
         }
@@ -191,16 +134,14 @@ namespace IntivePatronage.Controllers
         {
             try
             {
-                var user = await _repository.GetUserAsync(id);
+                var user = await repository.GetUserAsync(id);
 
-                if (user is null)
+                if(user is null)
                 {
                     return NotFound("Couldn't find the user");
                 }
-
-                _repository.Delete(user);
-
-                if (!(await _repository.SaveChangesAsync()))
+                
+                if(!(await repository.DeleteUserAsync(user)))
                 {
                     return BadRequest();
                 }
@@ -209,9 +150,8 @@ namespace IntivePatronage.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
         }
     }
 }

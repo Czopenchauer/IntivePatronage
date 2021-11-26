@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IntivePatronage.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -19,7 +19,7 @@ namespace IntivePatronage.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("IntivePatronage.Models.Address", b =>
+            modelBuilder.Entity("IntivePatronage.Entities.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +54,7 @@ namespace IntivePatronage.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("IntivePatronage.Models.User", b =>
+            modelBuilder.Entity("IntivePatronage.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace IntivePatronage.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2(0)");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -89,18 +89,18 @@ namespace IntivePatronage.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("IntivePatronage.Models.User", b =>
+            modelBuilder.Entity("IntivePatronage.Entities.User", b =>
                 {
-                    b.HasOne("IntivePatronage.Models.Address", "Address")
+                    b.HasOne("IntivePatronage.Entities.Address", "Address")
                         .WithOne("User")
-                        .HasForeignKey("IntivePatronage.Models.User", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("IntivePatronage.Entities.User", "AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("IntivePatronage.Models.Address", b =>
+            modelBuilder.Entity("IntivePatronage.Entities.Address", b =>
                 {
                     b.Navigation("User");
                 });

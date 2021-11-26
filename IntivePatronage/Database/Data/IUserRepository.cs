@@ -6,13 +6,20 @@ namespace IntivePatronage.ApplicationUser
 {
     public interface IUserRepository
     {
-        void Add<T>(T entity) where T : class;
-        void Delete<T>(T entity) where T : class;
+        Task<bool> AddUserAsync(User user);
+        void AddAddress(Address address);
 
-        Task<bool> SaveChangesAsync();
+        Task<bool> DeleteUserAsync(User user);
+        void DeleteAddress(Address address);
+
+
         Task<User> GetUserAsync(int id);
         Task<IEnumerable<User>> GetUsersAsync();
 
+        Task<Address> GetAddressAsync(int id);
+        Task<IEnumerable<Address>> GetAddressesAsync();
+
+        Task<bool> SaveChangesAsync();
 
     }
 }
