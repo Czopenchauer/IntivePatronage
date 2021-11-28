@@ -1,7 +1,7 @@
 ﻿using API.Models;
 using AutoMapper;
-using IntivePatronage.ApplicationUser;
-using IntivePatronage.Entities;
+using Database.Entities;
+using Database.Repositories;
 using IntivePatronage.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

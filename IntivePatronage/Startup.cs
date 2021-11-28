@@ -1,8 +1,5 @@
 using API.Models;
-using API.Validators;
 using FluentValidation;
-using IntivePatronage.ApplicationUser;
-using IntivePatronage.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using FluentValidation.AspNetCore;
 using IntivePatronage.Models;
+using Database.Repositories;
+using API.Validators;
+using Database;
 
 namespace IntivePatronage
 {

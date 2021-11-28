@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace API.Migrations
+namespace Database.Migrations
 {
     public partial class Init : Migration
     {
@@ -33,7 +33,7 @@ namespace API.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2(0)", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false),
                     Weight = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     AddressId = table.Column<int>(type: "int", nullable: false)

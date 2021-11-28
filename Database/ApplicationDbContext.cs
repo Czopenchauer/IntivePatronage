@@ -1,7 +1,7 @@
-﻿using IntivePatronage.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace IntivePatronage.Database
+namespace Database
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,11 +1,10 @@
-﻿using IntivePatronage.Database;
-using IntivePatronage.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System;
+using Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace IntivePatronage.ApplicationUser
+namespace Database.Repositories
 {
     public class UserRepository : IUserRepository
     {

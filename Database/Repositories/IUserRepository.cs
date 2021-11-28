@@ -1,8 +1,8 @@
-﻿using IntivePatronage.Entities;
+﻿using Database.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace IntivePatronage.ApplicationUser
+namespace Database.Repositories
 {
     public interface IUserRepository
     {

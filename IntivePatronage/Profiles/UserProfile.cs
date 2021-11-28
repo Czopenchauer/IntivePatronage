@@ -1,12 +1,7 @@
 ﻿using API.Models;
 using AutoMapper;
-using IntivePatronage.Entities;
+using Database.Entities;
 using IntivePatronage.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace API.Profiles
 {
