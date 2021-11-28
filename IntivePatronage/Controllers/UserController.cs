@@ -56,7 +56,10 @@ namespace IntivePatronage.Controllers
 
                 if (!users.Any())
                 {
-                    return NotFound();
+                    return NotFound(new
+                    {
+                        error = "There was no users in database."
+                    });
                 }
                 
                 return Ok(mapper.Map<IEnumerable<UserDto>>(users));
@@ -76,7 +79,11 @@ namespace IntivePatronage.Controllers
 
                 if (user is null)
                 {
-                    return NotFound("Couldn't find the user");
+                    return NotFound(new
+                    {
+                        Id = id,
+                        error = $"There was no user with an id of {id}."
+                    });
                 }
 
                 return Ok(mapper.Map<UserDto>(user));
@@ -96,7 +103,11 @@ namespace IntivePatronage.Controllers
 
                 if (user is null)
                 {
-                    return NotFound("Couldn't find the user");
+                    return NotFound(new
+                    {
+                        Id = id,
+                        error = $"There was no user with an id of {id}."
+                    });
                 }
 
                 mapper.Map(request, user);
@@ -124,7 +135,11 @@ namespace IntivePatronage.Controllers
 
                 if(user is null)
                 {
-                    return NotFound("Couldn't find the user");
+                    return NotFound(new
+                    {
+                        Id = id,
+                        error = $"There was no user with an id of {id}."
+                    });
                 }
                 
                 if(!(await repository.DeleteUserAsync(user)))
@@ -132,7 +147,7 @@ namespace IntivePatronage.Controllers
                     return BadRequest();
                 }
 
-                return Ok("Entity deleted");
+                return Ok();
             }
             catch (Exception)
             {

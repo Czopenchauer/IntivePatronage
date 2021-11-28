@@ -1,7 +1,6 @@
 ﻿using IntivePatronage.Database;
 using IntivePatronage.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,13 +24,14 @@ namespace IntivePatronage.ApplicationUser
             }
             try
             {
-                var transaction = ctx.Database.BeginTransaction();
+                using (var transaction = ctx.Database.BeginTransaction())
+                {
+                    ctx.Users.Add(user);
 
-                ctx.Users.Add(user);
+                    await ctx.SaveChangesAsync();
 
-                await ctx.SaveChangesAsync();
-
-                await transaction.CommitAsync();
+                    await transaction.CommitAsync();
+                }              
             }
             catch (Exception)
             {
@@ -50,14 +50,16 @@ namespace IntivePatronage.ApplicationUser
 
             try
             {
-                var transaction = ctx.Database.BeginTransaction();
-                var address = user.Address;
-                ctx.Users.Remove(user);
-                ctx.Addresses.Remove(address);
+                using (var transaction = ctx.Database.BeginTransaction())
+                {
+                    var address = user.Address;
+                    ctx.Users.Remove(user);
+                    ctx.Addresses.Remove(address);
 
-                await ctx.SaveChangesAsync();
+                    await ctx.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+                    await transaction.CommitAsync();
+                }
             }
             catch (Exception)
             {
@@ -104,7 +106,9 @@ namespace IntivePatronage.ApplicationUser
 
         public async Task<Address> GetAddressAsync(int id)
         {
-            return (await ctx.Addresses.Include(u => u.User).FirstOrDefaultAsync(x => x.User.Id == id));
+            return await ctx.Addresses
+                        .Include(u => u.User)
+                        .FirstOrDefaultAsync(x => x.User.Id == id);
         }
 
         public async Task<IEnumerable<Address>> GetAddressesAsync()

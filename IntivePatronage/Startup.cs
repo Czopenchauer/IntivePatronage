@@ -14,9 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Reflection;
 using FluentValidation.AspNetCore;
+using IntivePatronage.Models;
 
 namespace IntivePatronage
 {
@@ -55,7 +55,7 @@ namespace IntivePatronage
                          if (context.ModelState.ErrorCount > 0 &&
                          (actionExecutingContext?.ActionArguments.Count == context.ActionDescriptor.Parameters.Count))
                          {
-                             problemDetails.Status = StatusCodes.Status422UnprocessableEntity;
+                             problemDetails.Status = StatusCodes.Status400BadRequest;
                              problemDetails.Title = "One or more validation errors has occured.";
                              return new BadRequestObjectResult(problemDetails)
                              {
@@ -74,7 +74,12 @@ namespace IntivePatronage
                      };
                  });
 
-            services.AddTransient<IValidator<UserDto>, UserValidator>();
+            services.AddTransient<IValidator<BaseUserDto>, BaseUserValidator>();
+            services.AddTransient<IValidator<CreateUserDto>, CreateUserValidator>();
+            services.AddTransient<IValidator<AddressDto>, AddressValidator>();
+            services.AddTransient<IValidator<UpdateUserDto>, UpdateUserValidator>();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "IntivePatronage", Version = "v1" });
