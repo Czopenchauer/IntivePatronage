@@ -39,7 +39,7 @@ namespace IntivePatronage.Controllers
                     return BadRequest();
                 }
 
-                return Ok();
+                return Ok(mapper.Map<UserDto>(user));
             }
             catch (Exception)
             {
@@ -132,7 +132,7 @@ namespace IntivePatronage.Controllers
                     return BadRequest();
                 }
 
-                return Ok();
+                return Ok("Entity deleted");
             }
             catch (Exception)
             {

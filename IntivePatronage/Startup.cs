@@ -36,17 +36,43 @@ namespace IntivePatronage
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddControllers()
                 .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-                /*.ConfigureApiBehaviorOptions(setupAction => setupAction.InvalidModelStateResponseFactory = context => 
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .AddXmlDataContractSerializerFormatters()
+                .ConfigureApiBehaviorOptions(setupAction => 
                 {
-                    var problemDetailsFactory = context.HttpContext.RequestServices
-                        .GetRequiredService<ProblemDetailsFactory>();
-                    var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(context.HttpContext, context.ModelState);
+                    setupAction.InvalidModelStateResponseFactory = context =>
+                     {
+                         var problemDetailsFactory = context.HttpContext.RequestServices
+                             .GetRequiredService<ProblemDetailsFactory>();
 
-                    problemDetails.Status = StatusCodes.Status400BadRequest;
+                         var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(context.HttpContext, context.ModelState);
 
-                    return new BadRequestObjectResult(problemDetails);
-                })*/
+                         problemDetails.Instance = context.HttpContext.Request.Path;
+                         problemDetails.Detail = "See error field for details.";
+
+                         var actionExecutingContext = context as ActionExecutingContext;
+
+                         if (context.ModelState.ErrorCount > 0 &&
+                         (actionExecutingContext?.ActionArguments.Count == context.ActionDescriptor.Parameters.Count))
+                         {
+                             problemDetails.Status = StatusCodes.Status422UnprocessableEntity;
+                             problemDetails.Title = "One or more validation errors has occured.";
+                             return new BadRequestObjectResult(problemDetails)
+                             {
+                                 ContentTypes = { "application/problem+json" }
+                             };
+                         }
+
+                         problemDetails.Status = StatusCodes.Status400BadRequest;
+                         problemDetails.Title = "One or more errors on input has occured.";
+
+                         return new BadRequestObjectResult(problemDetails) 
+                         { 
+                             ContentTypes = { "application/problem+json" } 
+                         };
+
+                     };
+                 });
 
             services.AddTransient<IValidator<UserDto>, UserValidator>();
             services.AddSwaggerGen(c =>
