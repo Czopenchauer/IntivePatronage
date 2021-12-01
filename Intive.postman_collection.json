@@ -15,7 +15,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"User\": {\r\n        \"FirstName\": \"Hej\",\r\n        \"LastName\": \"cook\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : true,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"Wroclaw\",\r\n        \"PostCode\" : \"50-319\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
+					"raw": "{\r\n    \"User\": {\r\n        \"FirstName\": \"Mikolaj\",\r\n        \"LastName\": \"Cook\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : true,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"Wroclaw\",\r\n        \"PostCode\" : \"50-319\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -140,7 +140,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"User\": {\r\n        \"FirstName\": \"Lepszy\",\r\n        \"LastName\": \"Dave\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : 1,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"LepszyWroclaw\",\r\n        \"PostCode\" : \"69-420\",\r\n        \"Street\" : \"Wysokinskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    } \r\n}",
+					"raw": "{\r\n\t\"User\": {\r\n        \"FirstName\": \"Lepszy\",\r\n        \"LastName\": \"Dave\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : 1,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"LepszyWroclaw\",\r\n        \"PostCode\" : \"90-213\",\r\n        \"Street\" : \"Wysokinskiego\",\r\n        \"HouseNumber\" : 31,\r\n        \"LocalNumber\" : 44\r\n    } \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
