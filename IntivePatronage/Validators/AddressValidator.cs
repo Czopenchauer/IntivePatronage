@@ -1,4 +1,4 @@
-﻿using API.Models;
+﻿using Application.Models;
 using FluentValidation;
 
 namespace API.Validators

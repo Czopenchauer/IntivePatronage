@@ -1,8 +1,8 @@
-﻿using API.Models;
+﻿using Application.Filters;
+using Application.Models;
+using Application.Repositories;
 using AutoMapper;
 using Database.Entities;
-using Database.Repositories;
-using IntivePatronage.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -34,7 +34,7 @@ namespace IntivePatronage.Controllers
                 User user = new User();
                 mapper.Map(request, user);
 
-                if(!(await repository.AddUserAsync(user)))
+                if (!(await repository.AddUserAsync(user)))
                 {
                     return BadRequest();
                 }
@@ -48,7 +48,7 @@ namespace IntivePatronage.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync() 
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
         {
             try
             {
@@ -61,8 +61,31 @@ namespace IntivePatronage.Controllers
                         error = "There was no users in database."
                     });
                 }
-                
+
                 return Ok(mapper.Map<IEnumerable<UserDto>>(users));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> FilterUsersAsync(Filter filter)
+        {
+            try
+            {
+                var users = await repository.GetFilteredUsersAsync(filter);
+
+                if (!users.Any())
+                {
+                    return NotFound(new
+                    {
+                        error = "There was no users in database."
+                    });
+                }
+
+                return Ok(mapper.Map<IEnumerable<FilteredUserDto>>(users));
             }
             catch (Exception)
             {
@@ -94,19 +117,19 @@ namespace IntivePatronage.Controllers
             }
         }
 
-        [HttpPost("update/{id:int}")]
-        public async Task<ActionResult<UserDto>> UpdateUser(int id, UpdateUserDto request)
+        [HttpPost("update")]
+        public async Task<ActionResult<UserDto>> UpdateUser( UpdateUserDto request)
         {
             try
-            {              
-                var user = await repository.GetUserAsync(id);
+            {
+                var user = await repository.GetUserAsync(request.Id);
 
                 if (user is null)
                 {
                     return NotFound(new
                     {
-                        Id = id,
-                        error = $"There was no user with an id of {id}."
+                        Id = request.Id,
+                        error = $"There was no user with an id of {request.Id}."
                     });
                 }
 

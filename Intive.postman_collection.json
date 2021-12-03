@@ -15,7 +15,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"User\": {\r\n        \"FirstName\": \"Mikolaj\",\r\n        \"LastName\": \"Cook\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : true,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"Wroclaw\",\r\n        \"PostCode\" : \"50-319\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
+					"raw": "{\r\n    \"FirstName\": \"Mikolaj\",\r\n    \"LastName\": \"Cook\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : true,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"Wroclaw\",\r\n        \"PostCode\" : \"50-319\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -43,7 +43,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"User\": {\r\n        \"FirstName\": \"Dave\",\r\n        \"LastName\": \"Cook\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : 1,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"\",\r\n        \"PostCode\" : \"50-319999999\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
+					"raw": "{\r\n    \"FirstName\": \"Dave\",\r\n    \"LastName\": \"Cook\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"\",\r\n        \"PostCode\" : \"50-319999999\",\r\n        \"Street\" : \"Wyszynskiego\",\r\n        \"HouseNumber\" : 41,\r\n        \"LocalNumber\" : 25\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -104,13 +104,16 @@
 			"response": []
 		},
 		{
-			"name": "Update User",
+			"name": "Get filtered users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"User\": {\r\n        \"FirstName\": \"Lepszy\",\r\n        \"LastName\": \"Dave\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : 1,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": null\r\n}",
+					"raw": "{\r\n    \"LastName\" : \"Cook\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Country\" : \"Poland\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -118,7 +121,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:44359/User/update/1",
+					"raw": "https://localhost:44359/User/filter",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -126,8 +129,36 @@
 					"port": "44359",
 					"path": [
 						"User",
-						"update",
-						"1"
+						"filter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\" : 1,\r\n    \"FirstName\": \"JeszczeLEpszy\",\r\n    \"LastName\": \"Dave\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:44359/User/update",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User",
+						"update"
 					]
 				}
 			},
@@ -140,7 +171,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\t\"User\": {\r\n        \"FirstName\": \"Lepszy\",\r\n        \"LastName\": \"Dave\",\r\n        \"DateOfBirth\" : \"2021-12-12\",\r\n        \"Gender\" : 1,\r\n        \"Weight\" : 105.5\r\n    },\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"LepszyWroclaw\",\r\n        \"PostCode\" : \"90-213\",\r\n        \"Street\" : \"Wysokinskiego\",\r\n        \"HouseNumber\" : 31,\r\n        \"LocalNumber\" : 44\r\n    } \r\n}",
+					"raw": "{\r\n\t\"Id\" : 1,\r\n    \"FirstName\": \"Lepszy\",\r\n    \"LastName\": \"Dave\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": {\r\n        \"Country\" : \"Poland\",\r\n        \"City\" : \"LepszyWroclaw\",\r\n        \"PostCode\" : \"90-213\",\r\n        \"Street\" : \"Wysokinskiego\",\r\n        \"HouseNumber\" : 31,\r\n        \"LocalNumber\" : 44\r\n    } \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -199,7 +230,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44359/User/1016",
+					"raw": "https://localhost:44359/User/1",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -207,7 +238,7 @@
 					"port": "44359",
 					"path": [
 						"User",
-						"1016"
+						"1"
 					]
 				}
 			},

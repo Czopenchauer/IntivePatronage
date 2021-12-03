@@ -1,8 +1,9 @@
-﻿using Database.Entities;
+﻿using Application.Filters;
+using Database.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Database.Repositories
+namespace Application.Repositories
 {
     public interface IUserRepository
     {
@@ -15,6 +16,7 @@ namespace Database.Repositories
 
         Task<User> GetUserAsync(int id);
         Task<IEnumerable<User>> GetUsersAsync();
+        Task<IEnumerable<User>> GetFilteredUsersAsync(Filter filter);
 
         Task<Address> GetAddressAsync(int id);
         Task<IEnumerable<Address>> GetAddressesAsync();

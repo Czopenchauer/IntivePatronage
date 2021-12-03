@@ -1,4 +1,4 @@
-﻿using API.Models;
+﻿using Application.Models;
 using AutoMapper;
 using Database.Entities;
 

@@ -3,8 +3,11 @@ using System.Threading.Tasks;
 using System;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Database;
+using System.Linq;
+using Application.Filters;
 
-namespace Database.Repositories
+namespace Application.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -103,6 +106,23 @@ namespace Database.Repositories
                         .ToArrayAsync();
         }
 
+        public async Task<IEnumerable<User>> GetFilteredUsersAsync(Filter filter)
+        {
+            return await ctx.Users.Where(x => x.LastName.Equals(filter.LastName) &&
+                                x.DateOfBirth.CompareTo(filter.DateOfBirth) == 0 &&
+                                x.Address.Country.Equals(filter.Country))
+                .Select(x => new User
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    DateOfBirth = x.DateOfBirth,
+                    Address = new Address
+                    {
+                        Country = x.Address.Country
+                    }
+                }).ToArrayAsync();                  
+        }
+
         public async Task<Address> GetAddressAsync(int id)
         {
             return await ctx.Addresses
@@ -121,5 +141,6 @@ namespace Database.Repositories
         {
             return (await ctx.SaveChangesAsync() > 0);
         }
+
     }
 }

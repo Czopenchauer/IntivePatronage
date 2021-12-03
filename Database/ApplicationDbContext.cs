@@ -1,5 +1,6 @@
 ﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Database
 {
@@ -10,8 +11,24 @@ namespace Database
         public DbSet<User> Users { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
+        public static readonly LoggerFactory _myLoggerFactory = new LoggerFactory(new[] {
+            new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider()
+        });
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseLoggerFactory(_myLoggerFactory);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .ToTable("User");
+
+            modelBuilder.Entity<Address>()
+                .ToTable("Address");
+
             modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
 

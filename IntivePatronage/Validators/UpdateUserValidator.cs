@@ -1,7 +1,5 @@
-﻿using API.Models;
+﻿using Application.Models;
 using FluentValidation;
-using IntivePatronage.Models;
-using System;
 
 namespace API.Validators
 {
@@ -9,7 +7,7 @@ namespace API.Validators
     {
         public UpdateUserValidator()
         {
-            RuleFor(x => x.User).NotNull().SetValidator(new BaseUserValidator());
+            Include(new BaseUserValidator());
             RuleFor(x => x.Address).SetValidator(new AddressValidator());
         }
     }

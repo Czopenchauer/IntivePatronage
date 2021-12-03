@@ -1,4 +1,6 @@
-﻿namespace API.Models
+﻿using System;
+
+namespace Application.Models
 {
     public class BaseUserDto
     {

@@ -1,4 +1,4 @@
-﻿namespace API.Models
+﻿namespace Application.Models
 {
     public class AddressDto
     {

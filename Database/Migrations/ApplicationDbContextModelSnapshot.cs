@@ -51,7 +51,7 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
@@ -86,7 +86,7 @@ namespace Database.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
