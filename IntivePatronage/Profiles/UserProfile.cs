@@ -8,9 +8,6 @@ namespace API.Profiles
     {
         public UserProfile()
         {
-            CreateMap<User, FilteredUserDto>()
-                .ForMember(x => x.Country, y => y.MapFrom(z => z.Address.Country));
-
             CreateMap<User, UserDto>()
                 .ForMember(x => x.Address, y => y.MapFrom(z => z.Address));
 

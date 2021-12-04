@@ -65,7 +65,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Users",
+			"name": "Get Users default pagination",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -84,12 +84,41 @@
 			"response": []
 		},
 		{
+			"name": "Get Users pagination param",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44359/User?pageNumber=1&pageSize=3",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44359",
+					"path": [
+						"User"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get User by ID",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost:44359/User/1",
+					"raw": "https://localhost:44359/User/2",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -97,7 +126,7 @@
 					"port": "44359",
 					"path": [
 						"User",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -121,7 +150,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://localhost:44359/User/filter",
+					"raw": "https://localhost:44359/User/filter?pageNumber=1&pageSize=2",
 					"protocol": "https",
 					"host": [
 						"localhost"
@@ -130,6 +159,16 @@
 					"path": [
 						"User",
 						"filter"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "2"
+						}
 					]
 				}
 			},
@@ -142,7 +181,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Id\" : 1,\r\n    \"FirstName\": \"JeszczeLEpszy\",\r\n    \"LastName\": \"Dave\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : 1,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": null\r\n}",
+					"raw": "{\r\n    \"Id\" : 3,\r\n    \"FirstName\": \"JeszczeLEpszy\",\r\n    \"LastName\": \"Dave\",\r\n    \"DateOfBirth\" : \"2021-12-12\",\r\n    \"Gender\" : true,\r\n    \"Weight\" : 105.5,\r\n    \"Address\": null\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

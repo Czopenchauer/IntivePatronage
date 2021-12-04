@@ -1,11 +1,14 @@
 ﻿using Application.Filters;
+using Application.Helper;
 using Application.Models;
 using Application.Repositories;
+using Application.ResourceParameters;
 using AutoMapper;
 using Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,11 +51,11 @@ namespace IntivePatronage.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync([FromQuery] UserResourceParameter userResourceParameter)
         {
             try
             {
-                var users = await repository.GetUsersAsync();
+                var users = await repository.GetUsersAsync(userResourceParameter);
 
                 if (!users.Any())
                 {
@@ -71,11 +74,24 @@ namespace IntivePatronage.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> FilterUsersAsync(Filter filter)
+        public async Task<ActionResult<IEnumerable<FilteredUserDto>>> FilterUsersAsync(Filter filter, [FromQuery] UserResourceParameter userResourceParameter)
         {
             try
             {
-                var users = await repository.GetFilteredUsersAsync(filter);
+                var query = repository.GetFilteredUsersAsync();
+
+                var users = query
+                    .Where(x => 
+                        x.LastName.Equals(filter.LastName) &&
+                        x.DateOfBirth.CompareTo(filter.DateOfBirth) == 0 &&
+                        x.Address.Country.Equals(filter.Country))
+                    .Select(x => new
+                    {
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        DateOfBirth = x.DateOfBirth,
+                        Country = x.Address.Country
+                    });
 
                 if (!users.Any())
                 {
@@ -85,7 +101,14 @@ namespace IntivePatronage.Controllers
                     });
                 }
 
-                return Ok(mapper.Map<IEnumerable<FilteredUserDto>>(users));
+                return Ok(await PagedList<FilteredUserDto>.Create(users
+                    .Select(x => new FilteredUserDto
+                    {
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        DateOfBirth = x.DateOfBirth,
+                        Country = x.Country
+                    }), userResourceParameter.PageNumber, userResourceParameter.PageSize));
             }
             catch (Exception)
             {
@@ -118,7 +141,7 @@ namespace IntivePatronage.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<ActionResult<UserDto>> UpdateUser( UpdateUserDto request)
+        public async Task<ActionResult<UserDto>> UpdateUser(UpdateUserDto request)
         {
             try
             {

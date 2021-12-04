@@ -1,6 +1,7 @@
-﻿using Application.Filters;
+﻿using Application.Helper;
+using Application.ResourceParameters;
 using Database.Entities;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Repositories
@@ -15,11 +16,11 @@ namespace Application.Repositories
 
 
         Task<User> GetUserAsync(int id);
-        Task<IEnumerable<User>> GetUsersAsync();
-        Task<IEnumerable<User>> GetFilteredUsersAsync(Filter filter);
+        Task<PagedList<User>> GetUsersAsync(UserResourceParameter userResourceParameter);
+        IQueryable<User> GetFilteredUsersAsync();
 
         Task<Address> GetAddressAsync(int id);
-        Task<IEnumerable<Address>> GetAddressesAsync();
+        Task<PagedList<Address>> GetAddressesAsync(AddressResourceParameter addressResourceParameter);
 
         Task<bool> SaveChangesAsync();
 

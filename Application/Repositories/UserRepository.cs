@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Database;
 using System.Linq;
 using Application.Filters;
+using Application.Helper;
+using Application.ResourceParameters;
 
 namespace Application.Repositories
 {
@@ -99,28 +101,17 @@ namespace Application.Repositories
                         .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync()
-        {         
-             return await ctx.Users
-                        .Include(a => a.Address)
-                        .ToArrayAsync();
+        public async Task<PagedList<User>> GetUsersAsync(UserResourceParameter userResourceParameter)
+        {
+            var query = ctx.Users
+                .Include(a => a.Address);
+
+            return await PagedList<User>.Create(query, userResourceParameter.PageNumber, userResourceParameter.PageSize);
         }
 
-        public async Task<IEnumerable<User>> GetFilteredUsersAsync(Filter filter)
+        public IQueryable<User> GetFilteredUsersAsync()
         {
-            return await ctx.Users.Where(x => x.LastName.Equals(filter.LastName) &&
-                                x.DateOfBirth.CompareTo(filter.DateOfBirth) == 0 &&
-                                x.Address.Country.Equals(filter.Country))
-                .Select(x => new User
-                {
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    DateOfBirth = x.DateOfBirth,
-                    Address = new Address
-                    {
-                        Country = x.Address.Country
-                    }
-                }).ToArrayAsync();                  
+            return ctx.Users.AsQueryable();               
         }
 
         public async Task<Address> GetAddressAsync(int id)
@@ -130,11 +121,11 @@ namespace Application.Repositories
                         .FirstOrDefaultAsync(x => x.User.Id == id);
         }
 
-        public async Task<IEnumerable<Address>> GetAddressesAsync()
+        public async Task<PagedList<Address>> GetAddressesAsync(AddressResourceParameter addressResourceParameter)
         {
-            return await ctx.Addresses
-                       .Include(a => a.User)
-                       .ToArrayAsync();
+            var query = ctx.Addresses.AsQueryable();
+
+            return await PagedList<Address>.Create(query, addressResourceParameter.PageNumber, addressResourceParameter.PageSize);
         }
 
         public async Task<bool> SaveChangesAsync()
