@@ -31,7 +31,7 @@ namespace Application.Helper
         }
 
         public async static Task<PagedList<T>> Create(IQueryable<T> source, int pageNumber, int pageSize)
-        {
+        {           
             var count = source.Count();
             var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
 

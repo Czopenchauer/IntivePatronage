@@ -8,6 +8,7 @@ using System.Linq;
 using Application.Filters;
 using Application.Helper;
 using Application.ResourceParameters;
+using Application.Models;
 
 namespace Application.Repositories
 {
@@ -109,16 +110,27 @@ namespace Application.Repositories
             return await PagedList<User>.Create(query, userResourceParameter.PageNumber, userResourceParameter.PageSize);
         }
 
-        public IQueryable<User> GetFilteredUsersAsync()
+        public async Task<PagedList<FilteredUserDto>> GetFilteredUsersAsync(Filter filter, UserResourceParameter userResourceParameter)
         {
-            return ctx.Users.AsQueryable();               
+            return await PagedList<FilteredUserDto>.Create(ctx.Users
+                .Where(x =>
+                        x.LastName.Equals(filter.LastName) &&
+                        x.DateOfBirth.CompareTo(filter.DateOfBirth) == 0 &&
+                        x.Address.Country.Equals(filter.Country))
+                .Select(x => new FilteredUserDto
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    DateOfBirth = x.DateOfBirth,
+                    Country = x.Address.Country
+                }), userResourceParameter.PageNumber, userResourceParameter.PageSize);
         }
 
         public async Task<Address> GetAddressAsync(int id)
         {
             return await ctx.Addresses
                         .Include(u => u.User)
-                        .FirstOrDefaultAsync(x => x.User.Id == id);
+                        .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<PagedList<Address>> GetAddressesAsync(AddressResourceParameter addressResourceParameter)

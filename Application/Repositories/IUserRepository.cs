@@ -1,7 +1,8 @@
-﻿using Application.Helper;
+﻿using Application.Filters;
+using Application.Helper;
+using Application.Models;
 using Application.ResourceParameters;
 using Database.Entities;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Repositories
@@ -17,7 +18,7 @@ namespace Application.Repositories
 
         Task<User> GetUserAsync(int id);
         Task<PagedList<User>> GetUsersAsync(UserResourceParameter userResourceParameter);
-        IQueryable<User> GetFilteredUsersAsync();
+        Task<PagedList<FilteredUserDto>> GetFilteredUsersAsync(Filter filter, UserResourceParameter userResourceParameter);
 
         Task<Address> GetAddressAsync(int id);
         Task<PagedList<Address>> GetAddressesAsync(AddressResourceParameter addressResourceParameter);

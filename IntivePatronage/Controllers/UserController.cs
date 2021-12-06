@@ -78,20 +78,7 @@ namespace IntivePatronage.Controllers
         {
             try
             {
-                var query = repository.GetFilteredUsersAsync();
-
-                var users = query
-                    .Where(x => 
-                        x.LastName.Equals(filter.LastName) &&
-                        x.DateOfBirth.CompareTo(filter.DateOfBirth) == 0 &&
-                        x.Address.Country.Equals(filter.Country))
-                    .Select(x => new
-                    {
-                        FirstName = x.FirstName,
-                        LastName = x.LastName,
-                        DateOfBirth = x.DateOfBirth,
-                        Country = x.Address.Country
-                    });
+                var users = await repository.GetFilteredUsersAsync(filter, userResourceParameter);
 
                 if (!users.Any())
                 {
@@ -101,14 +88,7 @@ namespace IntivePatronage.Controllers
                     });
                 }
 
-                return Ok(await PagedList<FilteredUserDto>.Create(users
-                    .Select(x => new FilteredUserDto
-                    {
-                        FirstName = x.FirstName,
-                        LastName = x.LastName,
-                        DateOfBirth = x.DateOfBirth,
-                        Country = x.Country
-                    }), userResourceParameter.PageNumber, userResourceParameter.PageSize));
+                return Ok(users);
             }
             catch (Exception)
             {
